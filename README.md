@@ -45,7 +45,7 @@ After downloading the file you have to unzip it. Then follow the instructions in
 After you instantiated the environment in the first part you will examine the state and action space in the second. In the third part you can check how random agents perform in the environment.
 
 By running the cells in the fourth section you will train your own agents on the environment and test them afterwards.  
-Once the necessary classes (Actor, Critic, Agent, OUNoise and ReplayBuffer) are defined you will set up an agent by creating an instance of the Agent-class. Then (by defining and running the ddpg()-function) the deep deterministic policy gradient (DDPG-) algorithm is carried out on this instance. 
+Once the necessary classes (Actor, Critic, Agent, OUNoise and ReplayBuffer) are defined you will create an instance of the Agent-class. Then (by defining and running the ddpg()-function) the deep deterministic policy gradient (DDPG-) algorithm is carried out on this instance. 
 
 The agents stop learning after the goal is reached (average total reward of +30 over 100 consecutive episodes). You can plot the performance of your agents that was achieved during training.
 
