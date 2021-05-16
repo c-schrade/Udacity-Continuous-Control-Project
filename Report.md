@@ -10,10 +10,21 @@ Note also that the environment is already instantiated in part 1 of the notebook
 
 Now to part 4:
 
-First of all (in cell 11) the necessary packages are imported; most importantly torch and several subpackages of torch which will be used to build the neural network later.
 
-In the next cell (with number 12) the QNetwork class is created in which the neural network, that will approximate the action value function Q, is set up. In lines 17-19 (in the \_\_init\_\_-function) one can see the architecture of the network. The input size is 37-dimensional which fits the size of the state vectors that will be the inputs for the network. Then we have two linear hidden layers of size 64 and one linear output layer of size 4 (that is precisely the number of possible actions). The idea here is that for each state input the four output values will estimate the action values of the four possible actions in that state.
-In the forward-function the forward pass of the neural network is defined. One can see here (lines 25-27) that a relu-activation function is used for the two hidden layers whereas no activation function is applied to the output layer.
+In cell 6, in the Actor and Critic classes, the architecture of the neural networks, that will approximate the policy pi and the action value function Q, is defined. In the Actor class (lines 12 to 38) the structure of the neural network that will approximate the policy function is defined and has the following form:
+
+* The input size is 33 which is precisely the dimension of the state vectors.
+* There is one hidden layer of size 256 which is activated by the relu-function.
+* The output layer is of size 4 (, which is the dimension of the action vectors) and is activated by the tanh-function.
+
+In the Critic class (lines 41 to 74) the structure of the neural network that will approximate the action-value function Q is defined and has the following form:
+
+* There is one input layer of size 33 (= state dimension). The input of that layer gets sent through a hidden layer of dimension 256 and a leaky relu-function is applied afterwards.
+* The result after applying the leaky-relu gets concatenated with another input layer of size 4 (=action dimension).
+* The result of this concatenation gets sent through two hidden layers (of dimensions 256 and 128). Both of those hidden layers are activated by a leaky relu function.
+* The output layer has dimension 1 and no activation function is applied.
+
+
 
 In cell 13 the Agent and ReplayBuffer classes are created. But first some of the hyperparameters are already fixed here, namely:
 
