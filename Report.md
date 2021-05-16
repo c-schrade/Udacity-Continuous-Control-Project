@@ -52,28 +52,23 @@ In the ReplayBuffer class (lines 160-195) it is defined how to add experiences t
 In cell 8 an instance of the Agent class is created.
 
 
-In cell 14 the dqn()-function is defined. By calling this function later the deep Q-learning step will actually be carried out. The training loop (lines 14-38) does the following things in each episode (until either the training went on for n_episodes=1000 episodes or the goal of having an average score of +13 over 100 consecutive episodes is reached; see lines 35-38):
-* The environment is reset (lines 15-16)
-* The agent acts (line 19), gets a reward and a new state (lines 20-22) and learns by calling the step-method (line 24).
-* The cumulative reward that was achieved in the episode gets stored in the scores-list and the scores_window-deque (lines 29-30).
-* The epsilon value gets decreased (line 31).
-
-The scores_window-deque is used to check if the goal was reached in the current episode (line 35) and the scores-list is used for a plot later.
+In cell 12 the ddpg()-function is defined. By calling this function the DDPG-algorithm will actually be carried out. The training loop does the following things in each episode (until either the training went on for n_episodes=2000 episodes or the goal of having an average score of +30 over 100 consecutive episodes is reached):
+* The environment is reset.
+* The noise is reset.
+* In every timestep of the episode the agents act, get a reward, a new state and the step-method is called. By calling the step-method the new experience is stored in the Repaly-Buffer and every 20 timesteps the agents learn.
+* The cumulative reward that was achieved in the episode gets stored in the final\_scores-list and the final\_scores\_deque.
 
 
-In cell 15 an Agent-object is created and in cell 16 the deep Q-learning algorithm is finally carried out by calling the dqn()-function. Implicitely the following further hyperparameters are used (see also line 1 of cell 14):
-* maximal number of learning episodes: n_episodes=1000
-* start value for epsilon: eps_start=1.0
-* decay factor for epsilon per episode: eps_decay=0.995
-* minimal epsilon: eps_end=0.01
+The final\_scores\_deque is used to check if the goal was reached in the current episode and the final\_scores-list is used for a plot later.
 
-The goal was reached after a total number of 477 episodes. Since the average score over 100 consecutive episodes is checked, this means that the environment was solved after 377 episodes.
 
-In cell 17 the achieved total reward per epsisode is plotted. This plot you can also see here:
-![image info](./Pictures/training.png)
+The goal was reached after a total number of 208 episodes. Since the average score over 100 consecutive episodes is checked, this means that the environment was solved after 108 episodes.
 
-In cell 19 the trained agent is run for 100 more episodes in the Banana-Environment to check its performance. The average score is printed (14.65) and the scores that were achieved in every episode are plotted. This plot you can also see here:
-![image info](./Pictures/test.png)
+The achieved total reward per epsisode is plotted. This plot you can also see here:
+![image info](./Pictures/training_plot.png)
+
+In cell 9 the trained agents are run for 100 more episodes in the Reacher-Environment to check their performance. The scores that were achieved in every episode are plotted. This plot you can also see here:
+![image info](./Pictures/test_plot.png)
 
 In the last cell the environment gets closed.
 
