@@ -1,6 +1,12 @@
 # Report
 
-This is the detailed report on my implementation of the deep Q-learning algorithm for the Banana-Collector environment. I will just go through part 4 of the [Navigation.ipynb](Navigation.ipynb)-notebook because the learning algorithm is implemented there. Note that in part 4 I mostly adapted the code from the exercise in the Deep Q-networks lesson. Note also that the environment is already instantiated in part 1 of the notebook and referenced by the name "env".
+This is the detailed report on my implementation of the deep deterministic policy gradient algorithm (DDPG) for the Reacher environment. I will just go through part 4 of the [Continuous_Control.ipynb](Continuous_Control.ipynb)-notebook because the learning algorithm is implemented there. Note that in part 4 I mostly adapted the code from the bipedal notebook from the lesson about Actor-Critic Methods. Important things that were changed in the code from the bipedal notebook are:
+
+* The gradient in the backpropagation step for the critic neural network is clipped (see line 109 in cell 7).
+* The learning step is only carried out every 20 steps. But then it is done 10 times in a row (see lines 64-67 in cell 7).
+* The rewards that the agent gets are very small numbers from 0.01 to 0.04 most of the time. In order to stimulate training, every positive reward that is stored in the Replay-Buffer (and therefore used for training)  is changed to 0.1. I want to point out that this really just affects the training. The collected scores per episode that are used to test the performance of the agents really just contain the actual rewards the agents get directly from the environment (see lines 17 and 20 in cell 12).
+
+Note also that the environment is already instantiated in part 1 of the notebook and referenced by the name "env".
 
 Now to part 4:
 
