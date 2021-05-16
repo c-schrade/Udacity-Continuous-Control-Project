@@ -12,7 +12,7 @@ Note also that the environment is already instantiated in part 1 of the notebook
 Now to part 4:
 
 
-In cell 6, in the Actor and Critic classes, the architecture of the neural networks, that will approximate the policy pi and the action value function Q, is defined. In the Actor class (lines 12 to 38) the structure of the neural network that will approximate the policy function is defined and has the following form:
+In cell 6, in the Actor and Critic classes, the architecture of the neural networks, that will approximate the optimal policy pi and the optimal action value function Q, is defined. In the Actor class (lines 12 to 38) the structure of the neural network that will approximate the policy function is defined and has the following form:
 
 * The input size is 33 which is precisely the dimension of the state vectors.
 * There is one hidden layer of size 256 which is activated by the relu-function.
