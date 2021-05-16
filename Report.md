@@ -4,7 +4,7 @@ This is the detailed report on my implementation of the deep deterministic polic
 
 * The gradient in the backpropagation step for the critic neural network is clipped (see line 109 in cell 7).
 * The learning step is only carried out every 20 steps. But then it is done 10 times in a row (see lines 64-67 in cell 7).
-* The rewards that the agents get are very small numbers from 0.01 to 0.04 most of the time. In order to stimulate training, every positive reward that is stored in the Replay-Buffer (and therefore used for training) is changed to 0.1. I want to point out that this really just affects the training. The collected scores per episode, that are used to test the performance of the agents, still just contain the actual rewards, the agents get directly from the environment (see lines 17 and 20 in cell 12).
+* The rewards that the agents get are very small numbers from 0.01 to 0.04 most of the time. In order to stimulate training, every positive reward that is stored in the Replay-Buffer (and therefore used for training) is changed to 0.1. I want to point out that this really just affects the training. The collected scores per episode, that are used to test the performance of the agents, still just contain the actual rewards the agents get directly from the environment (see lines 17 and 20 in cell 12).
 * In the OUNoise class, where the noise which gets added to the actions is created, the random distribution is changed from a uniform to a standard normal distribution (line 156 in cell 7).
 
 Note also that the environment is already instantiated in part 1 of the notebook and referenced by the name "env".
