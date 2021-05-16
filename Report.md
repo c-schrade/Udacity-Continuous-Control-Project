@@ -65,9 +65,11 @@ The final\_scores\_deque is used to check if the goal was reached in the current
 The goal was reached after a total number of 208 episodes. Since the average score over 100 consecutive episodes is checked, this means that the environment was solved after 108 episodes.
 
 The achieved total reward per epsisode is plotted. This plot you can also see here:
+
 ![image info](./Pictures/training_plot.png)
 
 In cell 9 the trained agents are run for 100 more episodes in the Reacher-Environment to check their performance. The scores that were achieved in every episode are plotted. This plot you can also see here:
+
 ![image info](./Pictures/test_plot.png)
 
 In the last cell the environment gets closed.
