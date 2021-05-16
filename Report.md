@@ -4,7 +4,8 @@ This is the detailed report on my implementation of the deep deterministic polic
 
 * The gradient in the backpropagation step for the critic neural network is clipped (see line 109 in cell 7).
 * The learning step is only carried out every 20 steps. But then it is done 10 times in a row (see lines 64-67 in cell 7).
-* The rewards that the agent gets are very small numbers from 0.01 to 0.04 most of the time. In order to stimulate training, every positive reward that is stored in the Replay-Buffer (and therefore used for training)  is changed to 0.1. I want to point out that this really just affects the training. The collected scores per episode that are used to test the performance of the agents really just contain the actual rewards the agents get directly from the environment (see lines 17 and 20 in cell 12).
+* The rewards that the agent gets are very small numbers from 0.01 to 0.04 most of the time. In order to stimulate training, every positive reward that is stored in the Replay-Buffer (and therefore used for training)  is changed to 0.1. I want to point out that this really just affects the training. The collected scores per episode that are used to test the performance of the agents still just contain the actual rewards the agents get directly from the environment (see lines 17 and 20 in cell 12).
+* In the OUNoise class, where the noise which gets added to the actions is created, the random distribution is changed from a uniform to a standard normal distribution (line 156 in cell 7).
 
 Note also that the environment is already instantiated in part 1 of the notebook and referenced by the name "env".
 
@@ -26,21 +27,29 @@ In the Critic class (lines 41 to 74) the structure of the neural network that wi
 
 
 
-In cell 13 the Agent and ReplayBuffer classes are created. But first some of the hyperparameters are already fixed here, namely:
+In cell 7 the Agent and ReplayBuffer classes are created, as well as the OUNoise class. But first some of the hyperparameters are already fixed here, namely:
 
-* BUFFER_SIZE = 100000    (number of stored experiences for the experience replay)
-* BATCH_SIZE = 64         (batchsize of the batches that will be taken from the stored experiences during learning)
+* BUFFER_SIZE = 1000000   (number of stored experiences for the experience replay)
+* BATCH_SIZE = 128        (batchsize of the batches that will be taken from the stored experiences during learning)
 * GAMMA = 0.99            (discount rate)
 * TAU = 0.001             (we will update the weights of the target network softly with factor TAU)
-* LR = 0.0005             (learning rate)
-* UPDATE_EVERY = 4        (the weights of the networks will only be updated every 4 steps)
+* LR_ACTOR = 0.0001       (learning rate for the actor neural network)
+* LR_CRITIC = 0.0003      (learning rate for the critic neural network)
+* WEIGHT_DECAY = 0.0001   (L2 weight decay for the critic)
+* UPDATE_EVERY = 20       (the weights of the networks will only be updated every 20 steps)
+* UPDATE_X_TIMES = 10     (when the weights get updated then they will updated 10 times in a row in a single timestep)
 
 Then it is checked if a GPU is available and the device is set to GPU if that's the case; otherwise we will continue with CPU.  
-In the Agent class (lines 10-110) there are 5 methods:  
-In the \_\_init\_\_-method two neural networks are instantiated (respectively will get instantiated when an instance of type Agent gets created); one that will be updated every 4 timesteps (that is the qnetwork\_local, see line 27) and one that will be updated all 4 steps as well - but only softly - and that will serve as an approximation to the target function in the Q-learning step (that is the network qnetwork\_target, see line 28). Furthermore the optimizer for the backward propagation step is set to "Adam" (see line 29). Also the experience replay memory is initialized by creating a ReplayBuffer object (line 32).  
-In the step- and learn-methods the important parts of the learning step are implemented (see lines 36-46 and 68-97): By calling the step-method the experience replay memory is updated (line 38) and every four timesteps a batch from the memory is taken (line 45) and the learn-method gets called. By calling the learn-method in line 46 forward-and backward propagation of qnetwork\_local is carried out (see lines 80-93 for how the forward and backward propagation is implemented). Furthermore - by calling the soft\_update-method - the qnetwork\_target network gets updated softly with factor TAU (line 97; implementation of the soft\_update method is in lines 99-110). 
-In the act-method the behaviour of the agent (depending on the current estimate of the action-value function) is defined. One can see that the agent acts epsilon-greedily while learning (see lines 63-66). To get the current estimate of the action-value function for the state the agent is in, the state vector first gets sent through qnetwork_local by doing a forward pass (line 59).  
-In the ReplayBuffer class (lines 113-151) it is defined how to add experiences to the experience replay memory (in the add-method; lines 132-135) and how randomly created batches are chosen from the memory (in the sample-method; lines 137-147).
+In the Agent class (lines 23-136) there are 6 methods:  
+In the \_\_init\_\_-method (lines 26-53) four neural networks are instantiated (respectively will get instantiated when an instance of type Agent gets created); two Actor networks and two critic networks. Here one of the two critic networks (critic\_target) serves as the target function for the critic-learning step. One of the two Actor networks (actor\_target) is used to choose the actions that are input into this target function for the critic-learning step. The other two networks (actor\_local and critic\_local) are the networks that later (after training) will approximate the optimal policy respectively the optimal action-value function. Furthermore the optimizers for the backward propagation steps for actor\_local and critic\_local are set to "Adam". Also the experience replay memory is initialized by creating a ReplayBuffer object and the noise that will later be added to the actions is initialized by creating an OUNoise-object.  
+In the step- and learn-methods the important parts of the learning step are implemented (see lines 55-67 and 83-123): By calling the step-method the experience replay memory is updated and every 20 timesteps 10 batches from the memory are taken and the learn-method gets called 10 times (once per batch). By calling the learn-method forward-and backward propagation of actor\_local and critic\_local is carried out. Here the error of critic\_local is computed by using the target function critic\_target and actor\_local gets just maximized. Furthermore - by calling the soft\_update-method - actor\_target and critic\_target get updated softly with factor TAU (implementation of the soft\_update method is in lines 125-136). 
+In the act-method (see lines 69-78) the behaviour of the agents (depending on the current estimate of the optimal policy actor\_local) is defined. One can see that the agents don't exactly act as guided by actor\_local but there is a noise that is added to the output of the network. 
+In the Reset-method (lines 80-81) the noise gets resetted.
+In the OUNoise class (lines 138-158) the noise that will get added to the actions when the agents act is defined.
+In the ReplayBuffer class (lines 160-195) it is defined how to add experiences to the experience replay memory (in the add-method; lines 176-179) and how randomly created batches are chosen from the memory (in the sample-method; lines 181-191).
+
+
+In cell 8 an instance of the Agent class is created.
 
 
 In cell 14 the dqn()-function is defined. By calling this function later the deep Q-learning step will actually be carried out. The training loop (lines 14-38) does the following things in each episode (until either the training went on for n_episodes=1000 episodes or the goal of having an average score of +13 over 100 consecutive episodes is reached; see lines 35-38):
