@@ -76,14 +76,12 @@ In the last cell the environment gets closed.
 
 ### Ideas for future work
 
-I just adapted the hyperparameters from the Deep Q-Networks coding exercise and they worked well enough. But I haven't really played around with the hyperparameters and I would guess that there are still some possibilities to tweak them.
+I just adapted most of the hyperparameters from the bipedal notebook from the lesson on Actor-Critic Methods and they worked well enough. But I haven't really played around with the hyperparameters and I would guess that there are still some possibilities to tweak them.  
+Also one could try other algorithms we have learned in the last lessons to attack the environment, for example:
 
-Furthermore one could try out the six extensions of the DQN algorithm that were implemented in the Rainbow algorithm:
-* Double DQN
-* Prioritized experience replay 
-* Dueling DQN 
-* Learning from multi-step bootstrap targets
-* Distributional DQN
-* Noisy DQN
+* PPO
+* A3C
+* A2C
+* GAE
 
-I have no a priori idea if those extensions would give performance improvement for the Banana-Collector environment but at least these are definitely things one could try out.
+I have no a priori idea if those algorithms would give performance improvement for the Reacher environment but at least these are definitely things one could try out.
